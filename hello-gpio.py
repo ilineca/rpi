@@ -1,23 +1,25 @@
 from flask import Flask, render_template
 import datetime
 import RPi.GPIO as GPIO
+
 app = Flask(__name__)
 
 GPIO.setmode(GPIO.BCM)
 
+
 @app.route("/")
 def hello():
-   now = datetime.datetime.now()
-   timeString = now.strftime("%Y-%m-%d %H:%M")
-   templateData = {
-      'title' : 'HELLO!',
-      'time': timeString
-      }
-   return render_template('main.html', **templateData)
+    now = datetime.datetime.now()
+    time_string = now.strftime("%Y-%m-%d %H:%M")
+    template_data = {
+        'title': 'HELLO!',
+        'time': time_string
+    }
+    return render_template('main.html', **template_data)
+
 
 @app.route("/readPin/<pin>")
 def readPin(pin):
-
     try:
         GPIO.setup(int(pin), GPIO.IN)
         response = GPIO.input(int(pin))
@@ -25,9 +27,9 @@ def readPin(pin):
         response = "There was an error reading pin " + pin + ". Deeba!"
 
     templateData = {
-      'title' : 'Status of Pin' + pin,
-      'response' : response
-      }
+        'title': 'Status of Pin' + pin,
+        'response': response
+    }
 
     '''
        try:
@@ -40,9 +42,8 @@ def readPin(pin):
           response = "There was an error reading pin " + pin + "."
     '''
 
-
     return render_template('pin.html', **templateData)
 
 
 if __name__ == "__main__":
-   app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)
